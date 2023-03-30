@@ -7,6 +7,18 @@ public class GitHubTaggerConfiguration
     public string JiraUrl { get; set; }
     public TimeSpan Interval { get; set; }
 
+    public Dictionary<string, List<string>> JiraToGitHubLabelMappings = new()
+    {
+        { "community-growth", new List<string> { "team:teams-community-growth-pod" } },
+        { "enterprise", new List<string> { "enterprise" } }
+    };
+
+    public Dictionary<string, List<string>> JiraLabelToGitHubReviewerMappings = new()
+    {
+        { "community-growth", new List<string> { "stackeng/community-growth-pod" } },
+        { "enterprise", new List<string> { "iprefer-pi" } }
+    };
+
     public void ThrowIfInvalid()
     {
         if (string.IsNullOrWhiteSpace(GitHubPat))
