@@ -9,12 +9,16 @@ public class Worker : IHostedService
 {
     private readonly ILogger<Worker> _logger;
     private readonly Timer _timer;
+    private readonly GitHubTaggerConfiguration _configuration;
+    private readonly SynchronizePullRequestsUseCase _useCase;
 
     public Worker(ILogger<Worker> logger, GitHubTaggerConfiguration configuration, SynchronizePullRequestsUseCase useCase)
     {
+        _configuration = configuration;
         _logger = logger;
+        _useCase = useCase;
         _timer = new Timer(configuration.Interval);
-        _timer.Elapsed += async (sender, args) => await useCase.ExecuteAsync();
+        _timer.Elapsed += async (_, _) => await _useCase.ExecuteAsync();
         _timer.Enabled = false;
         _timer.AutoReset = true;
     }
@@ -24,6 +28,13 @@ public class Worker : IHostedService
         _timer.Start();
 
         _logger.LogInformation("Started timer with interval {Interval}", _timer.Interval);
+
+        if (_configuration.RunAtStartup)
+        {
+            _logger.LogInformation("Starting pull request update at startup");
+
+            Task.Run(async () => await _useCase.ExecuteAsync());
+        }
 
         return Task.CompletedTask;
     }

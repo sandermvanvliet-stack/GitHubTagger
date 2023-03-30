@@ -6,6 +6,7 @@ public class GitHubTaggerConfiguration
     public string JiraApiKey { get; set; }
     public string JiraUrl { get; set; }
     public TimeSpan Interval { get; set; }
+    public bool RunAtStartup { get; set; } = true;
 
     public Dictionary<string, List<string>> JiraToGitHubLabelMappings = new()
     {
