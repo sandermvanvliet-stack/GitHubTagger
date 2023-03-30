@@ -110,6 +110,11 @@ namespace GitHubTagger.UseCases
 
         private static string? GetJiraTicketIdFromTitle(PullRequest pr)
         {
+            if (string.IsNullOrWhiteSpace(pr?.Title))
+            {
+                return null;
+            }
+
             var match = JiraTicketNumberRegex.Match(pr.Title);
 
             if (match.Success)
