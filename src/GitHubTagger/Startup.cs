@@ -1,5 +1,6 @@
 ﻿using GitHubTagger.Adapters;
 using GitHubTagger.Ports;
+using GitHubTagger.UseCases;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,5 +22,7 @@ public class Startup
         serviceCollection.AddSingleton<IJiraApi, JiraApi>();
 
         serviceCollection.AddHostedService<Worker>();
+
+        serviceCollection.AddTransient<SynchronizePullRequestsUseCase>();
     }
 }
