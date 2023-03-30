@@ -27,20 +27,35 @@ namespace GitHubTagger.Adapters
                 Repos = new RepositoryCollection { "StackEng/StackOverflow" }
             };
 
+            var pullRequests = new List<PullRequest>();
+
             var results = await _client.Search.SearchIssues(searchRequest);
 
-            return results
-                .Items
-                .Select(ToPullRequest)
-                .ToArray();
+            foreach (var item in results.Items)
+            {
+                pullRequests.Add(await ToPullRequest(item));
+            }
+
+            return pullRequests.ToArray();
         }
 
-        private static PullRequest ToPullRequest(Issue item)
+        private async Task<PullRequest> ToPullRequest(Issue item)
         {
             var url = new Uri(item.Url);
             var pathParts = url.AbsolutePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
             var ownerName = pathParts[1];
             var repositoryName = pathParts[2];
+
+            var githubPullRequest = await _client.PullRequest.Get(ownerName, repositoryName, item.Number);
+
+            var reviewers = githubPullRequest
+                .RequestedReviewers
+                .Select(r => r.Login.ToLower())
+                .Concat(
+                    githubPullRequest
+                        .RequestedTeams
+                        .Select(team => $"{ownerName}/{team.Slug}".ToLower()))
+                .ToArray();
 
             var pullRequest = new PullRequest
             {
@@ -50,7 +65,7 @@ namespace GitHubTagger.Adapters
                 Name = repositoryName,
                 Title = item.Title,
                 Labels = item.Labels.Select(l => l.Name.ToLower()).ToArray(),
-                Reviewers = item.PullRequest.RequestedReviewers?.Select(r => r.Name.ToLower()).ToArray() ?? Array.Empty<string>()
+                Reviewers = reviewers
             };
 
             return pullRequest;
