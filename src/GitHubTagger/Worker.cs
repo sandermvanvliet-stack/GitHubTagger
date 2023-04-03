@@ -11,6 +11,7 @@ public class Worker : IHostedService
     private readonly Timer _timer;
     private readonly GitHubTaggerConfiguration _configuration;
     private readonly SynchronizePullRequestsUseCase _useCase;
+    private DateTime _lastRun;
 
     public Worker(ILogger<Worker> logger, GitHubTaggerConfiguration configuration, SynchronizePullRequestsUseCase useCase)
     {
@@ -18,9 +19,15 @@ public class Worker : IHostedService
         _logger = logger;
         _useCase = useCase;
         _timer = new Timer(configuration.Interval);
-        _timer.Elapsed += async (_, _) => await _useCase.ExecuteAsync();
+        _timer.Elapsed += async (_, _) => await TimerElapsedAsync();
         _timer.Enabled = false;
         _timer.AutoReset = true;
+    }
+
+    private async Task TimerElapsedAsync()
+    {
+        await _useCase.ExecuteAsync(_lastRun);
+        _lastRun = DateTime.UtcNow;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -33,7 +40,7 @@ public class Worker : IHostedService
         {
             _logger.LogInformation("Starting pull request update at startup");
 
-            Task.Run(async () => await _useCase.ExecuteAsync());
+            Task.Run(TimerElapsedAsync, cancellationToken);
         }
 
         return Task.CompletedTask;

@@ -17,7 +17,7 @@ namespace GitHubTagger.Adapters
                 new InMemoryCredentialStore(new Credentials(configuration.GitHubPat)));
         }
 
-        public async Task<PullRequest[]> GetPullRequests(string userName)
+        public async Task<PullRequest[]> GetPullRequests(string userName, DateTime lastRunDate)
         {
             var searchRequest = new SearchIssuesRequest
             {
@@ -26,6 +26,14 @@ namespace GitHubTagger.Adapters
                 State = ItemState.Open,
                 Repos = new RepositoryCollection { "StackEng/StackOverflow" }
             };
+
+            if (lastRunDate > DateTime.MinValue)
+            {
+                var lastRunDateTimeOffset = new DateTimeOffset(lastRunDate);
+
+                searchRequest.Created = new DateRange(lastRunDateTimeOffset, SearchQualifierOperator.GreaterThanOrEqualTo);
+                searchRequest.Updated = new DateRange(lastRunDateTimeOffset, SearchQualifierOperator.GreaterThanOrEqualTo);
+            }
 
             var pullRequests = new List<PullRequest>();
 

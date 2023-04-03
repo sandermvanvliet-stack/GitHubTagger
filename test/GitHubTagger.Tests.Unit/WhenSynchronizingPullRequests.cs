@@ -13,7 +13,7 @@ namespace GitHubTagger.Tests.Unit
         {
             _stubGitHubApi.PullRequest.Title = "TITLE WITHOUT TICKET ID";
 
-            await _useCase.ExecuteAsync();
+            await SynchronizePullRequestsAsync();
 
             _stubGitHubApi
                 .PullRequestUpdates
@@ -28,7 +28,7 @@ namespace GitHubTagger.Tests.Unit
 
             _stubJiraApi.Tickets.Add("JIRA-123", new JiraTicket { Labels = Array.Empty<string>() });
 
-            await _useCase.ExecuteAsync();
+            await SynchronizePullRequestsAsync();
 
             _stubGitHubApi
                 .PullRequestUpdates
@@ -43,7 +43,7 @@ namespace GitHubTagger.Tests.Unit
 
             _stubJiraApi.Tickets.Add("JIRA-123", new JiraTicket { Labels = Array.Empty<string>() });
 
-            await _useCase.ExecuteAsync();
+            await SynchronizePullRequestsAsync();
 
             _stubGitHubApi
                 .PullRequestUpdates
@@ -59,7 +59,7 @@ namespace GitHubTagger.Tests.Unit
 
             _stubJiraApi.Tickets.Add("JIRA-123", new JiraTicket { Labels = new [] { "enterprise" }});
 
-            await _useCase.ExecuteAsync();
+            await SynchronizePullRequestsAsync();
 
             _stubGitHubApi
                 .PullRequestUpdates
@@ -77,7 +77,7 @@ namespace GitHubTagger.Tests.Unit
 
             _stubJiraApi.Tickets.Add("JIRA-123", new JiraTicket { Labels = new[] { "enterprise" } });
 
-            await _useCase.ExecuteAsync();
+            await SynchronizePullRequestsAsync();
 
             _stubGitHubApi
                 .PullRequestUpdates
@@ -95,7 +95,7 @@ namespace GitHubTagger.Tests.Unit
 
             _stubJiraApi.Tickets.Add("JIRA-123", new JiraTicket { Labels = new[] { "enterprise" } });
 
-            await _useCase.ExecuteAsync();
+            await SynchronizePullRequestsAsync();
 
             _stubGitHubApi
                 .PullRequestUpdates
@@ -127,6 +127,11 @@ namespace GitHubTagger.Tests.Unit
                 _stubGitHubApi,
                 _stubJiraApi,
                 _configuration);
+        }
+
+        private async Task SynchronizePullRequestsAsync()
+        {
+            await _useCase.ExecuteAsync(DateTime.UtcNow);
         }
     }
 }

@@ -5,7 +5,7 @@ namespace GitHubTagger.Tests.Unit;
 
 public class StubGitHubApi : IGitHubApi
 {
-    public Task<PullRequest[]> GetPullRequests(string userName)
+    public Task<PullRequest[]> GetPullRequests(string userName, DateTime lastRunDate)
     {
         return Task.FromResult(new PullRequest[] { PullRequest });
     }

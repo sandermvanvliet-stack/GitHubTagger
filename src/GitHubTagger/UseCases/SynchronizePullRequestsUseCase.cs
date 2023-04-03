@@ -25,13 +25,13 @@ namespace GitHubTagger.UseCases
             _configuration = configuration;
         }
 
-        public async Task ExecuteAsync()
+        public async Task ExecuteAsync(DateTime lastRunDate)
         {
             var user = await _gitHubApi.GetCurrentUserAsync();
 
-            _logger.LogInformation("Checking pull requests for {User}", user.UserName);
+            _logger.LogInformation("Checking pull requests for {User} created or updated after {LastRunDate}", user.UserName, lastRunDate);
 
-            var pullRequests = await _gitHubApi.GetPullRequests(user.UserName);
+            var pullRequests = await _gitHubApi.GetPullRequests(user.UserName, lastRunDate);
 
             _logger.LogInformation("Found {Count} open pull requests", pullRequests.Length);
 
