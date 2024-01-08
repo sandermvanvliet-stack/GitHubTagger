@@ -6,7 +6,7 @@ It works like this:
 
 - Get open pull requests for the configured account from GitHub
 - For each pull request:
-  - Check if the title contains a Jira ticket like `[TEAMS-13245]`
+  - Check if the title contains a Jira ticket like `[PROJ-13245]`
   - Look up the ticket in Jira
   - For each label on the Jira ticket:
     - Map it to a GitHub label (using the `GitHubTaggerConfiguration.JiraToGitHubLabelMappings` values) and add them to the pull request if they are not present yet
@@ -30,6 +30,7 @@ The `appsettings.json` would look like this:
 {
     "GitHubTagger": {
         "GitHubPat": "super secret",
+        "JiraUserName": "your-user@your-company.com",
         "JiraApiKey": "super secret",
         "JiraUrl": "https://your-company.atlassian.net",
         "Interval": "00:05:00",
@@ -51,6 +52,7 @@ Using environment variables, you can do that like this (the mappings get a bit c
 
 ```.env
 GitHubTagger:GitHubPat=super secret
+GitHubTagger:JiraUserName=your-user@your-company.com
 GitHubTagger:JiraApiKey=super secret
 GitHubTagger:JiraUrl=https://your-company.atlassian.net
 GitHubTagger:Interval=00:05:00
