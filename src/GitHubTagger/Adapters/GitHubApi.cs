@@ -8,10 +8,13 @@ namespace GitHubTagger.Adapters
 {
     internal class GitHubApi : IGitHubApi
     {
+        private readonly GitHubTaggerConfiguration _configuration;
         private readonly GitHubClient _client;
 
         public GitHubApi(GitHubTaggerConfiguration configuration)
         {
+            _configuration = configuration;
+
             _client = new GitHubClient(
                 new ProductHeaderValue("GitHubTagger", ApplicationInfo.Version), 
                 new InMemoryCredentialStore(new Credentials(configuration.GitHubPat)));
@@ -24,7 +27,7 @@ namespace GitHubTagger.Adapters
                 Type = IssueTypeQualifier.PullRequest,
                 Author = userName,
                 State = ItemState.Open,
-                Repos = new RepositoryCollection { "StackEng/StackOverflow" }
+                Repos = new RepositoryCollection { _configuration.GitHubRepository }
             };
 
             if (lastRunDate > DateTime.MinValue)

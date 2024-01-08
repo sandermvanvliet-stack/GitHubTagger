@@ -2,25 +2,18 @@
 
 public class GitHubTaggerConfiguration
 {
+    public string GitHubRepository {get; set; }
     public string GitHubPat { get; set; }
     public string JiraApiKey { get; set; }
     public string JiraUrl { get; set; }
     public TimeSpan Interval { get; set; }
     public bool RunAtStartup { get; set; } = true;
 
-    public Dictionary<string, List<string>> JiraToGitHubLabelMappings = new()
-    {
-        { "content", new List<string> { "team:teams-content-pod" } },
-        { "community-growth", new List<string> { "team:teams-community-growth-pod" } },
-        { "enterprise", new List<string> { "enterprise" } }
-    };
+    public Dictionary<string, string[]> JiraToGitHubLabelMappings { get; set; } = new();
 
-    public Dictionary<string, List<string>> JiraLabelToGitHubReviewerMappings = new()
-    {
-        { "content", new List<string> { "stackeng/content-pod" } },
-        { "community-growth", new List<string> { "stackeng/community-growth-pod" } },
-        { "enterprise", new List<string> { "iprefer-pi" } }
-    };
+    public Dictionary<string, string[]> JiraLabelToGitHubReviewerMappings { get; set; } = new();
+
+    public Dictionary<string, string[]> Test { get; set; } = new();
 
     public void ThrowIfInvalid()
     {

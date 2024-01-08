@@ -27,9 +27,9 @@ namespace GitHubTagger.UseCases
 
         public async Task ExecuteAsync(DateTime lastRunDate)
         {
-            var user = await _gitHubApi.GetCurrentUserAsync();
+            _logger.LogInformation("Checking pull requests in {Repository}, created or updated after {LastRunDate}", _configuration.GitHubRepository, lastRunDate);
 
-            _logger.LogInformation("Checking pull requests for {User} created or updated after {LastRunDate}", user.UserName, lastRunDate);
+            var user = await _gitHubApi.GetCurrentUserAsync();
 
             var pullRequests = await _gitHubApi.GetPullRequests(user.UserName, lastRunDate);
 
