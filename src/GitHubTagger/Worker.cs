@@ -26,15 +26,24 @@ public class Worker : IHostedService
 
     private async Task TimerElapsedAsync()
     {
-        await _useCase.ExecuteAsync(_lastRun);
-        _lastRun = DateTime.UtcNow;
+        try {
+            await _useCase.ExecuteAsync(_lastRun);
+        } 
+        catch(Exception ex)
+        {
+            _logger.LogError(ex, "Failed to update pull requests: {Message}", ex.Message);
+        }
+        finally 
+        {
+            _lastRun = DateTime.UtcNow;
+        }
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _timer.Start();
 
-        _logger.LogInformation("Started timer with interval {Interval}", _timer.Interval);
+        _logger.LogInformation("Started timer with interval {Interval}", TimeSpan.FromMilliseconds(_timer.Interval));
 
         if (_configuration.RunAtStartup)
         {
