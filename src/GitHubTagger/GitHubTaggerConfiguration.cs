@@ -10,12 +10,14 @@ public class GitHubTaggerConfiguration
 
     public Dictionary<string, List<string>> JiraToGitHubLabelMappings = new()
     {
+        { "content", new List<string> { "team:teams-content-pod" } },
         { "community-growth", new List<string> { "team:teams-community-growth-pod" } },
         { "enterprise", new List<string> { "enterprise" } }
     };
 
     public Dictionary<string, List<string>> JiraLabelToGitHubReviewerMappings = new()
     {
+        { "content", new List<string> { "stackeng/content-pod" } },
         { "community-growth", new List<string> { "stackeng/community-growth-pod" } },
         { "enterprise", new List<string> { "iprefer-pi" } }
     };
