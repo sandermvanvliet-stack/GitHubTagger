@@ -69,11 +69,9 @@ namespace GitHubTagger.UseCases
 
             foreach (var label in jiraTicket.Labels)
             {
-                if (_configuration.JiraToGitHubLabelMappings.ContainsKey(label))
+                if (_configuration.JiraToGitHubLabelMappings.TryGetValue(label, out var mapping))
                 {
-                    var githubLabels = _configuration.JiraToGitHubLabelMappings[label];
-
-                    foreach (var githubLabel in githubLabels)
+                    foreach (var githubLabel in mapping)
                     {
                         if (!pullRequest.Labels.Contains(githubLabel))
                         {
@@ -82,10 +80,8 @@ namespace GitHubTagger.UseCases
                     }
                 }
 
-                if (_configuration.JiraLabelToGitHubReviewerMappings.ContainsKey(label))
+                if (_configuration.JiraLabelToGitHubReviewerMappings.TryGetValue(label, out var githubReviewers))
                 {
-                    var githubReviewers = _configuration.JiraLabelToGitHubReviewerMappings[label];
-
                     foreach (var githubReviewer in githubReviewers)
                     {
                         if (!pullRequest.Reviewers.Contains(githubReviewer))
