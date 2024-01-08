@@ -10,12 +10,14 @@ namespace GitHubTagger.Adapters
 
         public JiraApi(GitHubTaggerConfiguration configuration)
         {
-            _client = Jira.CreateRestClient(configuration.JiraUrl, "svanvliet@stackoverflow.com", configuration.JiraApiKey);
+            _client = Jira.CreateRestClient(configuration.JiraUrl, configuration.JiraUserName, configuration.JiraApiKey);
         }
 
         public async Task<JiraTicket?> GetTicketByIdAsync(string id)
         {
-            var issue = _client.Issues.Queryable.SingleOrDefault(issue => issue.Project == "TEAMS" && issue.Key == id);
+            var project = id.Split("-")[0];
+            
+            var issue = _client.Issues.Queryable.SingleOrDefault(issue => issue.Project == project && issue.Key == id);
 
             if (issue != null)
             {
