@@ -106,19 +106,16 @@ namespace GitHubTagger.UseCases
 
         private static string? GetJiraTicketIdFromTitle(PullRequest pr)
         {
-            if (string.IsNullOrWhiteSpace(pr?.Title))
+            if (string.IsNullOrWhiteSpace(pr.Title))
             {
                 return null;
             }
 
             var match = JiraTicketNumberRegex.Match(pr.Title);
 
-            if (match.Success)
-            {
-                return match.Groups[1].Value;
-            }
-
-            return null;
+            return match.Success 
+                ? match.Groups[1].Value 
+                : null;
         }
     }
 }
