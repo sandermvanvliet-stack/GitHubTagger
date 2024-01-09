@@ -4,7 +4,7 @@ public class GitHubTaggerConfiguration
 {
     public string GitHubRepository {get; set; }
     public string GitHubPat { get; set; }
-    public string JiraUserName { get; internal set; }
+    public string JiraUserName { get; set; }
     public string JiraApiKey { get; set; }
     public string JiraUrl { get; set; }
     public TimeSpan Interval { get; set; }
